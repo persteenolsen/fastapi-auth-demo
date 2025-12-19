@@ -62,11 +62,20 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-# TEST - Login: per - per@example.com - admin
+# Protected route that returns the current user's information
 @app.get("/users/me", response_model=schemas.User)
 async def read_users_me(current_user: models.User = Depends(get_current_user)):
     return current_user
 
+# Protected route that returns a message and the current user's Username 
+@app.get("/protected", tags=["root"])
+async def protected_route(current_user: models.User = Depends(get_current_user)):
+    return {"message": f"Hello {current_user.username}, this is a protected route!"}
+
+# Public root route that returns a message
+@app.get("/", tags=["root"])
+async def read_root() -> dict:
+    return {"message": "Welcome to FastAPI with Auth by JWT ..."}
 
 if __name__ == '__main__': #this indicates that this a script to be run
     uvicorn.run("main:app", host='0.0.0.0', port=8000, log_level="info", reload = True)
