@@ -1,4 +1,4 @@
-# Python + FastAPI + JWT by Auth + PostgreSQL at Neon
+# Python + FastAPI + PostgreSQL + Auth by JWT
 
 An API that serves User Login by JWT + Registration
 

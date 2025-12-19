@@ -11,8 +11,8 @@ models.Base.metadata.create_all(bind=engine)
 # Initialize the FastAPI app
 app = FastAPI(
 
-    title="Python + FastApi + Auth by JWT + PostgreSQL",
-    description="19-12-2025 - FastAPI serving JWT Auth by these credentials: testuser / admin",
+    title="Python + FastApi + PostgreSQL + Auth by JWT",
+    description="19-12-2025 - FastAPI serving Auth by JWT using these credentials: testuser / admin",
     version="0.0.1",
 
     contact={
