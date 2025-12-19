@@ -1,4 +1,4 @@
-# Python + FastAPI + Postgres at Neon
+# Python + FastAPI + PostgreSQL at Neon
 
 An API that serves User Login by JWT + Registration
 
@@ -42,11 +42,11 @@ If everything works fine, the FastAPI and Swagger documentation is now available
 
 `http://127.0.0.1:8000/docs`
 
-- Use the Swagger for Register a User in the Postgres DB and try to perform Login operations
+- Use the Swagger for Register a User in the PostgreSQL DB and try to perform Login operations
 
-- You can go to the Postgres at Neon to test your data in the DB
+- You can go to the PostgreSQL at Neon to test your data in the DB
 
-When you make a change to the models and start run the Web App the Postgres should be updated
+When you make a change to the models and start run the Web App the PostgreSQL should be updated
 
 # Deployment to Vercel
 
@@ -54,7 +54,7 @@ When you make a change to the models and start run the Web App the Postgres shou
 
 - Create a Project at Vercel from your repository at GitHub with the code of this FastAPI
 
-- Create the envirement variables from .env at Vercel with the connection to Postgres at Neon
+- Create the envirement variables from .env at Vercel with the connection to PostgreSQL
 
 - Make a commit to your GitHub
 
