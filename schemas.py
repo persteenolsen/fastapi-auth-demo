@@ -11,7 +11,10 @@ class User(BaseModel):
     email: EmailStr
 
     class Config:
-        orm_mode = True
+
+        # 19-12-2025 - Renamed orm_mode to from_attributes due to an Error
+        #orm_mode = True
+        from_attributes = True
 
 class Token(BaseModel):
     access_token: str
