@@ -37,7 +37,7 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
     return new_user
 
-# User Login Endpoint to obtain JWT token
+# User Login Endpoint which gets User Credentials and create JWT token if User is valid
 @app.post("/token", response_model=schemas.Token)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.username == form_data.username).first()
@@ -51,7 +51,7 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
     return {"access_token": access_token, "token_type": "bearer"}
 
 # Function that validates if the current User is Authenticated to the requested route 
-# by getting the current User from the JWT token 
+# Gets the Username of the current User from the JWT token and validate if the User exists in the DB 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     username = auth.verify_token(token)
     if username is None:
@@ -65,20 +65,30 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
+# Public root route that returns a message
+@app.get("/", tags=["root"])
+async def read_root() -> dict:
+    return {"message": "Welcome to FastAPI with Auth by JWT ..."}
+
 # Protected route that returns the current user's information
+# Validation: 401 is returned if token is invalid and 404 if user not found
 @app.get("/users/me", response_model=schemas.User)
 async def read_users_me(current_user: models.User = Depends(get_current_user)):
     return current_user
 
 # Protected route that returns a message and the current user's Username 
+# Validation: 401 is returned if token is invalid and 404 if user not found
 @app.get("/protected", tags=["root"])
 async def protected_route(current_user: models.User = Depends(get_current_user)):
     return {"message": f"Hello {current_user.username}, this is a protected route!"}
 
-# Public root route that returns a message
-@app.get("/", tags=["root"])
-async def read_root() -> dict:
-    return {"message": "Welcome to FastAPI with Auth by JWT ..."}
+# Protected route that returns a message and the current user's Username using token directly
+# Validation: 401 is returned if token is invalid 
+@app.get("/secure", tags=["root"])
+def secure_endpoint(token: str = Depends(oauth2_scheme)):
+    username = auth.verify_token(token)
+    return {"message": f"Hello {username}, you are authorized for this protected route!"}
+
 
 # Run the application at Vercel
 if __name__ == '__main__': #this indicates that this a script to be run
