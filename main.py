@@ -12,7 +12,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI(
 
     title="Python + FastApi + PostgreSQL + Auth by JWT",
-    description="19-12-2025 - FastAPI serving Auth by JWT using these credentials: testuser / admin",
+    description="20-12-2025 - FastAPI serving Auth by JWT using these credentials: testuser / admin",
     version="0.0.1",
 
     contact={
@@ -37,6 +37,7 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
     return new_user
 
+# User Login Endpoint to obtain JWT token
 @app.post("/token", response_model=schemas.Token)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.username == form_data.username).first()
