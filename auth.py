@@ -24,7 +24,7 @@ def get_password_hash(password):
     # return pwd_context.hash(password)
     return password_hash.hash(password)
 
-# Create JWT access token with expiration where data={"sub": username} recived from main.py
+# Create JWT access token with expiration where data={"sub": username} received from main.py
 def create_access_token(data: dict):
     to_encode = data.copy()
     

@@ -50,6 +50,8 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
     access_token = auth.create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
+# Function that validates if the current User is Authenticated to the requested route 
+# by getting the current User from the JWT token 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     username = auth.verify_token(token)
     if username is None:
@@ -78,5 +80,6 @@ async def protected_route(current_user: models.User = Depends(get_current_user))
 async def read_root() -> dict:
     return {"message": "Welcome to FastAPI with Auth by JWT ..."}
 
+# Run the application at Vercel
 if __name__ == '__main__': #this indicates that this a script to be run
     uvicorn.run("main:app", host='0.0.0.0', port=8000, log_level="info", reload = True)
