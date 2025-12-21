@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import os
 
+from fastapi import HTTPException, status
+
 # Load environment variables
 load_dotenv()
 
@@ -29,20 +31,29 @@ def create_access_token(data: dict):
     to_encode = data.copy()
     
     # 20-12-2025 - Changed datetime.utcnow() to datetime.now()
-    expire = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    # expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    # expire = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-# Verify JWT token and return username if valid
+# Verify JWT token by:
+# 1) Is valid signed by the SECRET_KEY
+# 2) Has a Username
+# 3) Has not expired
+# Note: If the token is invalid or expired (5 minutes for testing and demo), None is returned
 def verify_token(token: str):
+    
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        
         username: str = payload.get("sub")
         if username is None:
-            return None
+           return None
+       
         return username
+    
     except jwt.PyJWTError:
         return None
+       

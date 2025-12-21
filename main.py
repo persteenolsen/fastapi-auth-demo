@@ -12,7 +12,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI(
 
     title="Python + FastApi + PostgreSQL + Auth by JWT",
-    description="20-12-2025 - FastAPI serving Auth by JWT using these credentials: testuser / admin",
+    description="21-12-2025 - FastAPI serving Auth by JWT using these credentials: testuser / admin",
     version="0.0.1",
 
     contact={
@@ -23,6 +23,33 @@ app = FastAPI(
 
 # Define the OAuth2 scheme for token-based authentication
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+# Gets the Username of the current User from the JWT token
+# Validate if the token is valid and if the User exists in the database
+async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    username = auth.verify_token(token)
+    if username is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    user = db.query(models.User).filter(models.User.username == username).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+# Gets the Username of the current User from the JWT token
+# Validate if the token is valid
+async def get_current_username(token: str = Depends(oauth2_scheme)):
+    username = auth.verify_token(token)
+    if username is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="The JWT Token is not valid or has expired! Try to Autorize ...",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return username
 
 # 19-12-2025 - User Registration Endpoint disabled at Production
 # @app.post("/register", response_model=schemas.User)
@@ -50,21 +77,6 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
     access_token = auth.create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
-# Function that validates if the current User is Authenticated to the requested route 
-# Gets the Username of the current User from the JWT token and validate if the User exists in the DB 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    username = auth.verify_token(token)
-    if username is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    user = db.query(models.User).filter(models.User.username == username).first()
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
-
 # Public root route that returns a message
 @app.get("/", tags=["root"])
 async def read_root() -> dict:
@@ -85,10 +97,8 @@ async def protected_route(current_user: models.User = Depends(get_current_user))
 # Protected route that returns a message and the current user's Username using token directly
 # Validation: 401 is returned if token is invalid 
 @app.get("/secure", tags=["root"])
-def secure_endpoint(token: str = Depends(oauth2_scheme)):
-    username = auth.verify_token(token)
+def secure_endpoint(username: str = Depends(get_current_username)):
     return {"message": f"Hello {username}, you are authorized for this protected route!"}
-
 
 # Run the application at Vercel
 if __name__ == '__main__': #this indicates that this a script to be run
