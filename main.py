@@ -2,17 +2,28 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from database import engine, get_db
-import models, schemas, auth
+
+import models, auth
 import uvicorn
 
-# Run the database migrations
-models.Base.metadata.create_all(bind=engine)
+# With the below import statement we import the User model and reference the username of a User by:
+# User.username
+from models.user import User
+
+# To Avoid confusion / conflict with the names of Models we import the schemas Objects as:
+# UserSchema, UserCreateSchema and TokenSchema
+from schemas.user import User as UserSchema
+from schemas.user import UserCreate as UserCreateSchema
+from schemas.token import Token as TokenSchema
+
+# Run the database migrations to create tables from the models
+models.user.Base.metadata.create_all(bind=engine)
 
 # Initialize the FastAPI app
 app = FastAPI(
 
     title="Python + FastApi + PostgreSQL + Auth by JWT",
-    description="21-12-2025 - FastAPI serving Auth by JWT using these credentials: testuser / admin",
+    description="22-12-2025 - FastAPI serving Auth by JWT using these credentials: testuser / admin",
     version="0.0.1",
 
     contact={
@@ -34,7 +45,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
             detail="Invalid authentication credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    user = db.query(models.User).filter(models.User.username == username).first()
+    user = db.query(User).filter(User.username == username).first()
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
@@ -52,22 +63,23 @@ async def get_current_username(token: str = Depends(oauth2_scheme)):
     return username
 
 # 19-12-2025 - User Registration Endpoint disabled at Production
-# @app.post("/register", response_model=schemas.User)
-def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(models.User).filter(models.User.username == user.username).first()
+# @app.post("/register", response_model=UserSchema)
+def register_user(user: UserCreateSchema, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.username == user.username).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
     hashed_password = auth.get_password_hash(user.password)
-    new_user = models.User(username=user.username, email=user.email, hashed_password=hashed_password)
+
+    new_user = User(username=user.username, email=user.email, hashed_password=hashed_password)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return new_user
 
 # User Login Endpoint which gets User Credentials and create JWT token if User is valid
-@app.post("/token", response_model=schemas.Token)
+@app.post("/token", response_model=TokenSchema)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.username == form_data.username).first()
+    user = db.query(User).filter(User.username == form_data.username).first()
     if not user or not auth.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -84,14 +96,14 @@ async def read_root() -> dict:
 
 # Protected route that returns the current user's information
 # Validation: 401 is returned if token is invalid and 404 if user not found
-@app.get("/users/me", response_model=schemas.User)
-async def read_users_me(current_user: models.User = Depends(get_current_user)):
+@app.get("/users/me", response_model=UserSchema)
+async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 # Protected route that returns a message and the current user's Username 
 # Validation: 401 is returned if token is invalid and 404 if user not found
 @app.get("/protected", tags=["root"])
-async def protected_route(current_user: models.User = Depends(get_current_user)):
+async def protected_route(current_user: User = Depends(get_current_user)):
     return {"message": f"Hello {current_user.username}, this is a protected route!"}
 
 # Protected route that returns a message and the current user's Username using token directly

@@ -4,7 +4,7 @@ An API that serves User Login by JWT + Registration
 
 Last updated:
 
-- 21-12-2025
+- 22-12-2025
 
 Python Version local:
 
@@ -50,7 +50,13 @@ When you make a change to the models and start run the Web App the PostgreSQL sh
 
 # JWT Authentication
 
-- The token will expire after 5 minutes for testing and demo. Then a 401 status will happen 
+- The token will expire after 5 minutes for testing and demo. Then a 401 status will happen
+
+# The Models and Schemas folders
+
+- The Models are placed in files inside the directory models/ for scalability
+
+- The Schemas are placed in files inside the directory schemas/ for scalability
 
 # Deployment to Vercel
 
