@@ -1,5 +1,7 @@
 from fastapi import FastAPI
-from database import engine
+
+# Import the database engine
+from db.database import engine
 
 import models
 import uvicorn

@@ -1,5 +1,3 @@
-# The functionality of the file was moved to security folder
-'''
 # from passlib.context import CryptContext
 from pwdlib import PasswordHash
 
@@ -58,4 +56,4 @@ def verify_token(token: str):
     
     except jwt.PyJWTError:
         return None
-'''       
+       

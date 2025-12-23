@@ -1,3 +1,4 @@
+# The functionality of the file was moved to schemas folder
 '''
 from pydantic import BaseModel, EmailStr
 

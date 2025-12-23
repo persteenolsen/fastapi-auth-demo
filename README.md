@@ -52,11 +52,19 @@ When you make a change to the models and start run the Web App the PostgreSQL sh
 
 - The token will expire after 5 minutes for testing and demo. Then a 401 status will happen
 
-# The Models and Schemas folders
+# The structure of the API by folders for scalability
 
-- The Models are placed in files inside the directory models/ for scalability
+- The Database functionality is placed in files inside the directory db
 
-- The Schemas are placed in files inside the directory schemas/ for scalability
+- The Routes are placed in files inside the directory routes
+
+- The Models are placed in files inside the directory models
+
+- The Schemas are placed in files inside the directory schemas
+
+- The functionality of authentication is placed inside the directory security
+
+- The functionality like get current user, called from the Routes, is placed inside the directory services
 
 # Deployment to Vercel
 

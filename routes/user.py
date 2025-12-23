@@ -1,9 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-import auth
-
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from database import get_db
+
+# Import auth functions from security/auth.py
+from security.auth import verify_password, get_password_hash, create_access_token, verify_token
+
+# Import the get_current_username and get_current_user functions from services/users.py
+from services.users import get_current_username, get_current_user
+
+# Import the database session dependency
+from db.database import get_db
 
 # With the below import statement we import the User model and reference the username of a User by:
 # User.username
@@ -17,46 +23,13 @@ from schemas.token import Token as TokenSchema
 
 router_auth = APIRouter()
 
-# Define the OAuth2 scheme for token-based authentication
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-# Note: The below to functions could be placed in service/user.py for auth related functions in 
-# order to separate concerns and make the code more modular
-# Gets the Username of the current User from the JWT token
-# Validate if the token is valid
-async def get_current_username(token: str = Depends(oauth2_scheme)):
-    username = auth.verify_token(token)
-    if username is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="The JWT Token is not valid or has expired! Try to Autorize ...",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return username
-
-# Gets the Username of the current User from the JWT token
-# Validate if the token is valid and if the User exists in the database
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    username = auth.verify_token(token)
-    if username is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    user = db.query(User).filter(User.username == username).first()
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
-
-
-# 19-12-2025 - User Registration Endpoint disabled for Production
+# 23-12-2025 - User Registration Endpoint disabled for Production
 # @router_auth.post("/register", response_model=UserSchema)
 def register_user(user: UserCreateSchema, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.username == user.username).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
-    hashed_password = auth.get_password_hash(user.password)
+    hashed_password = get_password_hash(user.password)
 
     new_user = User(username=user.username, email=user.email, hashed_password=hashed_password)
     db.add(new_user)
@@ -68,13 +41,13 @@ def register_user(user: UserCreateSchema, db: Session = Depends(get_db)):
 @router_auth.post("/token", response_model=TokenSchema)
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == form_data.username).first()
-    if not user or not auth.verify_password(form_data.password, user.hashed_password):
+    if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token = auth.create_access_token(data={"sub": user.username})
+    access_token = create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
 # Protected route that returns the current user's information

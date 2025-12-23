@@ -1,3 +1,4 @@
+# The functionality of the file was moved to models folder
 '''
 from sqlalchemy import Column, Integer, String
 from database import Base
