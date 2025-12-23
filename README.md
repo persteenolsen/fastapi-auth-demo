@@ -4,7 +4,7 @@ An API that serves User Login by JWT + Registration
 
 Last updated:
 
-- 22-12-2025
+- 23-12-2025
 
 Python Version local:
 
