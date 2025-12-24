@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 # Import auth functions from security/auth.py
-from security.auth import verify_password, get_password_hash, create_access_token, verify_token
+from security.auth import verify_password, get_password_hash, create_access_token
 
 # Import the get_current_username and get_current_user functions from services/users.py
 from services.users import get_current_username, get_current_user
@@ -24,7 +24,8 @@ from schemas.token import Token as TokenSchema
 router_auth = APIRouter()
 
 # 23-12-2025 - User Registration Endpoint disabled for Production
-# @router_auth.post("/register", response_model=UserSchema)
+# @router_auth.post("/register", response_model=UserSchema, tags=["user"])
+# Public Route
 def register_user(user: UserCreateSchema, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.username == user.username).first()
     if db_user:
@@ -38,7 +39,8 @@ def register_user(user: UserCreateSchema, db: Session = Depends(get_db)):
     return new_user
 
 # User Login Endpoint which gets User Credentials and create JWT token if User is valid
-@router_auth.post("/token", response_model=TokenSchema)
+# Public Route
+@router_auth.post("/token", response_model=TokenSchema, tags=["user"])
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == form_data.username).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
@@ -52,30 +54,18 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
 
 # Protected route that returns the current user's information
 # Validation: 401 is returned if token is invalid and 404 if user not found
-@router_auth.get("/users/me", response_model=UserSchema)
+@router_auth.get("/users/me", response_model=UserSchema, tags=["user"])
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 # Protected route that returns a message and the current user's Username 
 # Validation: 401 is returned if token is invalid and 404 if user not found
-@router_auth.get("/protected", tags=["root"])
+@router_auth.get("/protected", tags=["user"])
 async def protected_route(current_user: User = Depends(get_current_user)):
     return {"message": f"Hello {current_user.username}, this is a protected route!"}
 
 # Protected route that returns a message and the current user's Username using token directly
 # Validation: 401 is returned if token is invalid 
-@router_auth.get("/secure", tags=["root"])
+@router_auth.get("/secure", tags=["user"])
 def secure_endpoint(username: str = Depends(get_current_username)):
     return {"message": f"Hello {username}, you are authorized for this protected route!"}
-
-# Note: The below two routes are public and do not require authentication and could be placed
-# in a separate router file for public routes
-# Public root route that returns a message
-@router_auth.get("/", tags=["root"])
-async def read_root() -> dict:
-    return {"message": "Welcome to FastAPI with Auth by JWT ..."}
-
-# Public ping route that returns a pong message
-@router_auth.get("/ping", tags=["root"])
-async def read_root() -> dict:
-    return {"message": "Pong ..."}

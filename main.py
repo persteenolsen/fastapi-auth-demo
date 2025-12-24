@@ -9,14 +9,17 @@ import uvicorn
 # Import the routes from routes/user.py
 from routes.user import router_auth as router_auth_jwt
 
+# Import the routes from routes/simple.py
+from routes.simple import router_simple as router_simple_one
+
 # Run the database migrations to create tables from the models
 models.user.Base.metadata.create_all(bind=engine)
 
 # Initialize the FastAPI app
 app = FastAPI(
 
-    title="Python + FastApi + PostgreSQL + Auth by JWT",
-    description="23-12-2025 - FastAPI serving Auth by JWT using these credentials: testuser / admin",
+    title="Python + FastApi + PostgreSQL + JWT Authentication",
+    description="24-12-2025 - FastAPI serving JWT Authentication using these credentials: testuser / admin",
     version="0.0.1",
 
     contact={
@@ -27,6 +30,9 @@ app = FastAPI(
 
 # Include the routes from routes/user.py
 app.include_router(router_auth_jwt)
+
+# Include the routes from routes/simple.py
+app.include_router(router_simple_one)
 
 # Run the application at Vercel
 if __name__ == '__main__': #this indicates that this a script to be run

@@ -1,18 +1,15 @@
-# Python + FastAPI + PostgreSQL + Auth by JWT
+# Python + FastAPI + PostgreSQL + JWT Authentication
 
-An API that serves User Login by JWT + Registration
+A REST API that serves JWT Authentication + Registration
 
 Last updated:
 
-- 23-12-2025
+- 24-12-2025
 
-Python Version local:
-
-- 3.12.1
-
-Python Version at Vercel:
+Python Version:
 
 - 3.12
+
 
 # Get startet
 
@@ -56,7 +53,9 @@ When you make a change to the models and start run the Web App the PostgreSQL sh
 
 - The Database functionality is placed in files inside the directory db
 
-- The Routes are placed in files inside the directory routes
+- The User Routes are placed in files inside the directory routes/user.py
+
+- The simple Routes are placed in files inside the directory routes/simple.py
 
 - The Models are placed in files inside the directory models
 
