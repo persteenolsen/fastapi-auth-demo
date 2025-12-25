@@ -8,5 +8,9 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
+
+    # 25-12-2025 - Added Users Name
+    name = Column(String, index=True)
+
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)

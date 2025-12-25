@@ -4,12 +4,11 @@ A REST API that serves JWT Authentication + Registration
 
 Last updated:
 
-- 24-12-2025
+- 25-12-2025
 
 Python Version:
 
 - 3.12
-
 
 # Get startet
 
@@ -64,6 +63,20 @@ When you make a change to the models and start run the Web App the PostgreSQL sh
 - The functionality of authentication is placed inside the directory security
 
 - The functionality like get current user, called from the Routes, is placed inside the directory services
+
+# Migration
+
+- Install and use Alembic for Migration and run:
+
+- alembic init alembic
+
+- For demonstration I added name in the User Model and Schema and generated and applied migration:
+
+- alembic revision --autogenerate -m "create column name"
+
+- alembic upgrade head
+
+- Then run the FastAPI again and check that everything works fine
 
 # Deployment to Vercel
 

@@ -24,15 +24,16 @@ from schemas.token import Token as TokenSchema
 router_auth = APIRouter()
 
 # 23-12-2025 - User Registration Endpoint disabled for Production
-# @router_auth.post("/register", response_model=UserSchema, tags=["user"])
 # Public Route
+# @router_auth.post("/register", response_model=UserSchema, tags=["user"])
 def register_user(user: UserCreateSchema, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.username == user.username).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
     hashed_password = get_password_hash(user.password)
-
-    new_user = User(username=user.username, email=user.email, hashed_password=hashed_password)
+    
+    # 25-12-2025 - Added Users Name
+    new_user = User(username=user.username, name=user.name, email=user.email, hashed_password=hashed_password)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
