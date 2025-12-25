@@ -1,4 +1,4 @@
-# Python + FastAPI + PostgreSQL + JWT Authentication
+# Python + FastAPI + PostgreSQL + JWT Authentication + Alembic
 
 A REST API that serves JWT Authentication + Registration
 
@@ -64,7 +64,7 @@ When you make a change to the models and start run the Web App the PostgreSQL sh
 
 - The functionality like get current user, called from the Routes, is placed inside the directory services
 
-# Migration
+# Migration with Alembic
 
 - Install and use Alembic for Migration and run:
 
