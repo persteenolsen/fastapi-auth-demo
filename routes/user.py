@@ -41,7 +41,8 @@ def register_user(user: UserCreateSchema, db: Session = Depends(get_db)):
 
 # User Login Endpoint which gets User Credentials and create JWT token if User is valid
 # Public Route
-@router_auth.post("/authenticate", response_model=TokenSchema, tags=["user"])
+# 26-12-2025 - The endpoint needs to be /token for using the OpenAPI Autorize button
+@router_auth.post("/token", response_model=TokenSchema, tags=["user"])
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == form_data.username).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
