@@ -19,7 +19,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 # order to separate concerns and make the code more modular
 
 # Gets the Username of the current User from the JWT token
-# Validate if the token is valid and if the User exists in the database
+# Validate if the token is valid
+# Validate if the User exist in the Database
+# Return the current User with the information
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     username = verify_token(token)
     if username is None:
@@ -46,7 +48,9 @@ async def get_current_username(token: str = Depends(oauth2_scheme)):
     return username
 
 # Gets all Users from the PostgreSQL Database
-# Validate if the token is valid before returning all Users from the Database
+# Validate if the token is valid
+# Validate if there are any Users in the Database
+# Returning all Users from the Database
 async def get_all_users(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
 
     # Validate Token

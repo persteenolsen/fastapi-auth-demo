@@ -41,7 +41,7 @@ def register_user(user: UserCreateSchema, db: Session = Depends(get_db)):
 
 # User Login Endpoint which gets User Credentials and create JWT token if User is valid
 # Public Route
-@router_auth.post("/token", response_model=TokenSchema, tags=["user"])
+@router_auth.post("/authenticate", response_model=TokenSchema, tags=["user"])
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == form_data.username).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
@@ -59,20 +59,14 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
-# Protected route that returns a message and the current user's Username 
-# Validation: 401 is returned if token is invalid and 404 if user not found
-@router_auth.get("/protected", tags=["user"])
-async def protected_route(current_user: User = Depends(get_current_user)):
-    return {"message": f"Hello {current_user.username}, this is a protected route!"}
-
 # Protected route that returns a message and the current user's Username using token directly
 # Validation: 401 is returned if token is invalid 
-@router_auth.get("/secure", tags=["user"])
+@router_auth.get("/protected-route", tags=["user"])
 def secure_endpoint(username: str = Depends(get_current_username)):
     return {"message": f"Hello {username}, you are authorized for this protected route!"}
 
 # Protected route that returns all Users from the Database if the token is valid
 # Validation: 401 is returned if token is invalid and 404 if no users found 
-@router_auth.get("/get-users", response_model=list[UserSchema], tags=["user"])
+@router_auth.get("/get-all-users", response_model=list[UserSchema], tags=["user"])
 def secure_endpoint(users: str = Depends(get_all_users)):
     return users
