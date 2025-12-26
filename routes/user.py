@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from security.auth import verify_password, get_password_hash, create_access_token
 
 # Import the get_current_username and get_current_user functions from services/users.py
-from services.users import get_current_username, get_current_user
+from services.users import get_current_username, get_current_user, get_all_users
 
 # Import the database session dependency
 from db.database import get_db
@@ -70,3 +70,9 @@ async def protected_route(current_user: User = Depends(get_current_user)):
 @router_auth.get("/secure", tags=["user"])
 def secure_endpoint(username: str = Depends(get_current_username)):
     return {"message": f"Hello {username}, you are authorized for this protected route!"}
+
+# Protected route that returns all Users from the Database if the token is valid
+# Validation: 401 is returned if token is invalid and 404 if no users found 
+@router_auth.get("/get-users", response_model=list[UserSchema], tags=["user"])
+def secure_endpoint(users: str = Depends(get_all_users)):
+    return users
