@@ -1,15 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
-
-# Import auth functions from security/auth.py
-from security.auth import verify_password, get_password_hash, create_access_token
 
 # Import the get_current_username and get_current_user functions from services/users.py
-from services.users import get_current_username, get_current_user, get_all_users
-
-# Import the database session dependency
-from db.database import get_db
+from services.users import get_current_username, get_current_user
+from services.users import get_all_users, get_access_token_for_login, do_register_user
 
 # With the below import statement we import the User model and reference the username of a User by:
 # User.username
@@ -23,36 +17,19 @@ from schemas.token import Token as TokenSchema
 
 router_auth = APIRouter()
 
-# 23-12-2025 - User Registration Endpoint disabled for Production
-# Public Route
+# Public route that returns access token and type if User credentials are valid
+# 27-12-2025 - The endpoint needs to be /token for using the OpenAPI Autorize button
+# Note: User Registration Endpoint disabled for Production
 # @router_auth.post("/register", response_model=UserSchema, tags=["user"])
-def register_user(user: UserCreateSchema, db: Session = Depends(get_db)):
-    db_user = db.query(User).filter(User.username == user.username).first()
-    if db_user:
-        raise HTTPException(status_code=400, detail="Username already registered")
-    hashed_password = get_password_hash(user.password)
-    
-    # 25-12-2025 - Added Users Name
-    new_user = User(username=user.username, name=user.name, email=user.email, hashed_password=hashed_password)
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+def register_user(user: UserCreateSchema):
+    new_user = do_register_user(user)
     return new_user
 
-# User Login Endpoint which gets User Credentials and create JWT token if User is valid
-# Public Route
-# 26-12-2025 - The endpoint needs to be /token for using the OpenAPI Autorize button
+# Public route that returns access token and type if User credentials are valid
+# 27-12-2025 - The endpoint needs to be /token for using the OpenAPI Autorize button
 @router_auth.post("/token", response_model=TokenSchema, tags=["user"])
-def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.username == form_data.username).first()
-    if not user or not verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    access_token = create_access_token(data={"sub": user.username})
-    return {"access_token": access_token, "token_type": "bearer"}
+def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    return get_access_token_for_login(form_data)
 
 # Protected route that returns the current user's information
 # Validation: 401 is returned if token is invalid and 404 if user not found
