@@ -1,6 +1,10 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
+# Import the database session dependency
+from db.database import get_db
+from sqlalchemy.orm import Session
+
 # Import the get_current_username and get_current_user functions from services/users.py
 from services.users import get_current_username, get_current_user
 from services.users import get_all_users, get_access_token_for_login, do_register_user
@@ -20,7 +24,7 @@ router_auth = APIRouter()
 # Public route that returns access token and type if User credentials are valid
 # 27-12-2025 - The endpoint needs to be /token for using the OpenAPI Autorize button
 # Note: User Registration Endpoint disabled for Production
-# @router_auth.post("/register", response_model=UserSchema, tags=["user"])
+@router_auth.post("/register", response_model=UserSchema, tags=["user"])
 def register_user(user: UserCreateSchema):
     new_user = do_register_user(user)
     return new_user
@@ -28,8 +32,8 @@ def register_user(user: UserCreateSchema):
 # Public route that returns access token and type if User credentials are valid
 # 27-12-2025 - The endpoint needs to be /token for using the OpenAPI Autorize button
 @router_auth.post("/token", response_model=TokenSchema, tags=["user"])
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    return get_access_token_for_login(form_data)
+def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    return get_access_token_for_login(form_data ,db)
     
 
 # Protected route that returns the current user's information

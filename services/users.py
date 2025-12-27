@@ -34,7 +34,8 @@ def do_register_user(user, db: Session = Depends(get_db)):
     return new_user
 
 # Public route that returns access token and type if User credentials are valid
-async def get_access_token_for_login(form_data, db: Session = Depends(get_db)):
+def get_access_token_for_login(form_data, db):
+    
     user = db.query(User).filter(User.username == form_data.username).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
         
