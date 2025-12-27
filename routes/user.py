@@ -28,9 +28,9 @@ def register_user(user: UserCreateSchema):
 # Public route that returns access token and type if User credentials are valid
 # 27-12-2025 - The endpoint needs to be /token for using the OpenAPI Autorize button
 @router_auth.post("/token", response_model=TokenSchema, tags=["user"])
-def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    token = get_access_token_for_login(form_data)
-    return token
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    return get_access_token_for_login(form_data)
+    
 
 # Protected route that returns the current user's information
 # Validation: 401 is returned if token is invalid and 404 if user not found
