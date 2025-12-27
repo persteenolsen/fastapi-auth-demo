@@ -17,7 +17,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # Note: The below to functions are placed in service/user.py for auth related functions in 
 # order to separate concerns and make the code more modular
-def do_register_user(user, db: Session = Depends(get_db)):
+def do_register_user(user, db):
     
     db_user = db.query(User).filter(User.username == user.username).first()
     if db_user:

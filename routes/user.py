@@ -25,8 +25,8 @@ router_auth = APIRouter()
 # 27-12-2025 - The endpoint needs to be /token for using the OpenAPI Autorize button
 # Note: User Registration Endpoint disabled for Production
 @router_auth.post("/register", response_model=UserSchema, tags=["user"])
-def register_user(user: UserCreateSchema):
-    new_user = do_register_user(user)
+def register_user(user: UserCreateSchema, db: Session = Depends(get_db)):
+    new_user = do_register_user(user, db)
     return new_user
 
 # Public route that returns access token and type if User credentials are valid
