@@ -21,20 +21,31 @@ from schemas.token import Token as TokenSchema
 
 router_auth = APIRouter()
 
+# Note: An old version of the below endpoint is kept commented out for reference
+# @router_auth.post("/register", response_model=UserSchema, tags=["user"])
+'''def register_user(user: UserCreateSchema, db: Session = Depends(get_db)):
+    new_user = do_register_user(user, db)
+    return new_user
+'''
 # Public route that returns access token and type if User credentials are valid
 # 27-12-2025 - The endpoint needs to be /token for using the OpenAPI Autorize button
 # Note: User Registration Endpoint disabled for Production
-# @router_auth.post("/register", response_model=UserSchema, tags=["user"])
-def register_user(user: UserCreateSchema, db: Session = Depends(get_db)):
-    new_user = do_register_user(user, db)
+@router_auth.post("/register", response_model=UserSchema, tags=["user"])
+def register_user(new_user = Depends(do_register_user)):
     return new_user
+
+# Note: An old version of the below endpoint is kept commented out for reference
+'''@router_auth.post("/token", response_model=TokenSchema, tags=["user"])
+    def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    return get_access_token_for_login(form_data ,db)
+'''
 
 # Public route that returns access token and type if User credentials are valid
 # 27-12-2025 - The endpoint needs to be /token for using the OpenAPI Autorize button
+# Note: The db session and form_data dependencies are handled inside the service function
 @router_auth.post("/token", response_model=TokenSchema, tags=["user"])
-def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    return get_access_token_for_login(form_data ,db)
-    
+def login_for_access_token(token_and_type = Depends(get_access_token_for_login)):
+    return token_and_type
 
 # Protected route that returns the current user's information
 # Validation: 401 is returned if token is invalid and 404 if user not found
