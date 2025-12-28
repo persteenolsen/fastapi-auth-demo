@@ -31,13 +31,13 @@ app = FastAPI(
 
 # Set up CORS middleware
 origins = [
+
+    # Not sure if this is needed, but adding just in case
     "https://fastapi-auth-demo.vercel.app",
-    "http://127.0.0.1:8000",
-    "http://localhost",
-    "http://localhost:8080",
-   
-    "0.0.0.0/0",
-    "*"
+     
+    # Allow my local Vue SPA
+    "http://localhost:3000"
+    
 ]
 
 
