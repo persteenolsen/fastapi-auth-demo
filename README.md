@@ -1,4 +1,4 @@
-# Python + FastAPI + PostgreSQL + JWT Authentication + Alembic
+# Python + FastAPI + PostgreSQL + JWT Authentication + Alembic + SQLAlchemy
 
 A REST API that serves JWT Authentication + Registration
 
