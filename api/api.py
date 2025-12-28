@@ -34,6 +34,9 @@ origins = [
 
     # Not sure if this is needed, but adding just in case
     "https://fastapi-auth-demo.vercel.app",
+
+    # The domain name of the Vue 3 SPA Client
+    "https://vue.fastapi.jwt.auth.client.persteenolsen.com",
      
     # Allow my local Vue SPA
     "http://localhost:3000"
