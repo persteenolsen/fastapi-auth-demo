@@ -33,7 +33,7 @@ def login_for_access_token(token_and_type = Depends(get_access_token_for_login))
 # Protected route that returns the current user's information
 # Validation: 401 is returned if token is invalid and 404 if user not found
 @router_auth.get("/users/me", response_model=UserSchema, tags=["user"])
-async def read_users_me(current_user: User = Depends(get_current_user)):
+def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
 # Protected route that returns a message and the current user's Username using token directly

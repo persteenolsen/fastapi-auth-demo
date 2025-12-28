@@ -53,7 +53,7 @@ def get_access_token_for_login(form_data: OAuth2PasswordRequestForm = Depends(),
 # Validate if the token is valid
 # Validate if the User exist in the Database
 # Return the current User with the information
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     username = verify_token(token)
     if username is None:
         raise HTTPException(
@@ -68,7 +68,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 
 # Gets the Username of the current User from the JWT token
 # Validate if the token is valid
-async def get_current_username(token: str = Depends(oauth2_scheme)):
+def get_current_username(token: str = Depends(oauth2_scheme)):
     username = verify_token(token)
     if username is None:
         raise HTTPException(
@@ -82,7 +82,7 @@ async def get_current_username(token: str = Depends(oauth2_scheme)):
 # Validate if the token is valid
 # Validate if there are any Users in the Database
 # Returning all Users from the Database
-async def get_all_users(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_all_users(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
 
     # Validate Token
     username = verify_token(token)
