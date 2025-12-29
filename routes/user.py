@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
 # Import the get_current_username and get_current_user functions from services/users.py
-from services.users import get_current_username, get_current_user
-from services.users import get_all_users, get_access_token_for_login, do_register_user
+from services.users import get_current_username, get_current_user, get_all_users, do_register_user
+from services.users import get_access_token_for_login, get_access_token_for_login_spa
 
 # With the below import statement we import the User model and reference the username of a User by:
 # User.username
@@ -13,6 +13,7 @@ from models.user import User
 # UserSchema, UserCreateSchema and TokenSchema
 from schemas.user import User as UserSchema
 from schemas.token import Token as TokenSchema
+from schemas.token import TokenSPA as TokenSchemaSPA
 
 router_auth = APIRouter()
 
@@ -29,6 +30,13 @@ def register_user(new_user = Depends(do_register_user)):
 @router_auth.post("/token", response_model=TokenSchema, tags=["user"])
 def login_for_access_token(token_and_type = Depends(get_access_token_for_login)):
     return token_and_type
+
+# Public route that returns access token, type and username if User credentials are valid
+# 29-12-2025 - Added endpoint for Single Page Applications
+# Note: The db session and form_data dependencies are handled inside the service function
+@router_auth.post("/token-spa", response_model=TokenSchemaSPA, tags=["user"])
+def login_for_access_token_spa(token_type_username = Depends(get_access_token_for_login_spa)):
+    return token_type_username
 
 # Protected route that returns the current user's information
 # Validation: 401 is returned if token is invalid and 404 if user not found

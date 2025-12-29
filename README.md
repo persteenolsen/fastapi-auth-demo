@@ -1,10 +1,10 @@
-# Python + FastAPI + PostgreSQL + JWT Authentication + Alembic + SQLAlchemy
+# Python + FastAPI + PostgreSQL + JWT Auth + Alembic + SQLAlchemy
 
 A REST API that serves JWT Authentication + Registration
 
 Last updated:
 
-- 28-12-2025
+- 29-12-2025
 
 Python Version:
 

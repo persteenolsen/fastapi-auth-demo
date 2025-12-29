@@ -36,6 +36,7 @@ def do_register_user(user: UserCreateSchema, db: Session = Depends(get_db)):
     return new_user
 
 # Public route that returns access token and type if User credentials are valid
+# 29-12-2025 - Used by the OpenAPI docs and standard login
 # Note: This function uses Dependency Injection for form_data and db session
 def get_access_token_for_login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == form_data.username).first()
@@ -48,6 +49,21 @@ def get_access_token_for_login(form_data: OAuth2PasswordRequestForm = Depends(),
         )
     access_token = create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
+
+# Public route that returns access token, type and username if User credentials are valid
+# 29-12-2025 - Modified to also return username for SPA applications
+# Note: This function uses Dependency Injection for form_data and db session
+def get_access_token_for_login_spa(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.username == form_data.username).first()
+    if not user or not verify_password(form_data.password, user.hashed_password):
+        
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token = create_access_token(data={"sub": user.username})
+    return {"access_token": access_token, "token_type": "bearer", "username": user.username}
 
 # Gets the Username of the current User from the JWT token
 # Validate if the token is valid
