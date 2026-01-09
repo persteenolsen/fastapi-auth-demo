@@ -4,7 +4,7 @@ A REST API that serves JWT Authentication + Registration
 
 Last updated:
 
-- 04-01-2026
+- 09-01-2026
 
 Python Version:
 
