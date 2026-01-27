@@ -1,4 +1,4 @@
-# Python + FastAPI + PostgreSQL + JWT Auth + Alembic + SQLAlchemy
+# Python + FastAPI + PostgreSQL + Alembic + SQLAlchemy + JWT Authentication 
 
 A REST API that serves Registration + JWT Authentication
 
@@ -25,6 +25,8 @@ Python Version:
 - Install the requirements:
 
 "pip3 install -r requirements.txt"
+
+# Try the Vue 3 frontend for testing the Web API
 
 - [`The Vue 3 Client at GitHub`](https://github.com/persteenolsen/vue-fastapi-jwt-auth-client) - The Vue 3 Client using JWT Authentication
 
