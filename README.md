@@ -99,7 +99,6 @@ python -m tests.test_auth_manual
 
 - Valid access token authentication
 - Expired token handling
-- Invalid token detection
 - Invalid signature detection
 
 ### Example Output
