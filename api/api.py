@@ -13,14 +13,15 @@ from routes.user import router_auth as router_auth_jwt
 # Import the routes from routes/simple.py
 from routes.simple import router_simple as router_simple_one
 
+# 14-06-2026 - The migration should be done only by Alembic
 # Run the database migrations to create tables from the models
-models.user.Base.metadata.create_all(bind=engine)
+# models.user.Base.metadata.create_all(bind=engine)
 
 # Initialize the FastAPI app
 app = FastAPI(
 
     title="Python + FastApi + PostgreSQL + SQLAlchemy + Alembic + JWT Auth",
-    description="28-03-2026 - FastAPI serving JWT Authentication using these credentials: testuser / admin",
+    description="14-06-2026 - FastAPI serving JWT Authentication using these credentials: testuser / admin",
     version="0.0.1",
 
     contact={

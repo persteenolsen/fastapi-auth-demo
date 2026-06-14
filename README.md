@@ -1,98 +1,184 @@
-# Python + FastAPI + PostgreSQL + Alembic + SQLAlchemy and JWT Authentication 
+# Python + FastAPI + PostgreSQL + Alembic + SQLAlchemy + JWT Authentication
 
-A REST API that serves Registration + JWT Authentication
+A REST API for user registration, authentication, and protected routes using JWT. Includes database migrations and manual tests.
 
 Last updated:
+- 14-06-2026
 
-- 28-03-2026
-
-Python Version:
-
+Python version:
 - 3.12
 
-# Get startet
+---
 
-- Clone the repository from my GitHub 
+## Features
 
-- Create a virtual environment by Powershell or VS Code:
+- User registration and login
+- JWT-based authentication (access tokens)
+- Protected routes with dependency injection
+- PostgreSQL integration via SQLAlchemy
+- Database migrations with Alembic
+- Automated testing with pytest
+- Swagger/OpenAPI documentation
+- Modular and scalable project structure
 
-"python -m venv <name_of_venv>"
+---
 
-- Go to the virtual environment's directory and activate it:
+## Tech Stack
 
-"Scripts/activate"
+- FastAPI
+- PostgreSQL
+- SQLAlchemy
+- Alembic
+- Pydantic
+- Pytest
+- Uvicorn
+- Python 3.12
 
-- Install the requirements:
+---
 
-"pip3 install -r requirements.txt"
+## Getting Started
 
-# Try the Vue 3 frontend for testing the Web API
+### 1. Clone the repository
 
-- [`The Vue 3 Client at GitHub`](https://github.com/persteenolsen/vue-fastapi-jwt-auth-client) - The Vue 3 Client using JWT Authentication
+Clone from GitHub:
 
-# Swagger documentation / Testing the API
+- git clone <your-repository-url>
 
-FastAPI provides the Swagger documentation of the API where you can perform CRUD operations
+### 2. Create virtual environment
 
-To access the documentation, we must run uvicorn:
+Using PowerShell or VS Code terminal:
 
-"uvicorn main:app --reload"
+- python -m venv <name_of_venv>
 
-If everything works fine, the FastAPI and Swagger documentation is now available at: 
+Activate it:
 
-`http://127.0.0.1:8000/docs`
+- Windows: Scripts\activate
+- Mac/Linux: source bin/activate
 
-- Use the Swagger for Register a User in the PostgreSQL DB and try to perform Login operations
+### 3. Install dependencies
 
-- You can go to the PostgreSQL at Neon to test your data in the DB
+- pip install -r requirements.txt
 
-When you make a change to the models and start run the Web App the PostgreSQL should be updated
+---
 
-# JWT Authentication
+## Environment Variables
 
-- The token will expire after 5 minutes for testing and demo. Then a 401 status will happen
+Create a .env file with your configuration:
 
-# The structure of the API by folders for scalability
+- DATABASE_URL=your_postgres_connection_string
+- SECRET_KEY=your_secret_key
+- ALGORITHM=HS256
+- ACCESS_TOKEN_EXPIRE_MINUTES=5
 
-- The Database functionality is placed in files inside the directory db
+---
 
-- The User Routes are placed in files inside the directory routes/user.py
+## Run the Application
 
-- The simple Routes are placed in files inside the directory routes/simple.py
+Start the FastAPI server:
 
-- The Models are placed in files inside the directory models
+- uvicorn main:app --reload
 
-- The Schemas are placed in files inside the directory schemas
+API will be available at:
 
-- The functionality of authentication is placed inside the directory security
+- http://127.0.0.1:8000
 
-- The functionality like get current user, called from the Routes, is placed inside the directory services
+Swagger documentation:
 
-# Migration with Alembic
+- http://127.0.0.1:8000/docs
 
-- Install and use Alembic for Migration and run:
+
+## Manual Tests (Authentication Verification)
+
+This project includes a lightweight manual test suite for verifying JWT authentication behavior without requiring pytest.
+
+### Run Tests
+
+python -m tests.test_auth_manual
+
+### What Is Tested
+
+- Valid access token authentication
+- Expired token handling
+- Invalid token detection
+- Invalid signature detection
+
+### Example Output
+
+Valid token test: testuser
+
+Expired token test: None
+
+Invalid signature test: None
+
+All tests finished
+
+---
+
+## JWT Authentication
+
+- Authentication is handled using JWT tokens
+- Tokens expire after 5 minutes (demo configuration)
+- Expired tokens return 401 Unauthorized
+
+---
+
+## Project Structure
+
+- db/ → Database configuration and session management
+- models/ → SQLAlchemy database models
+- schemas/ → Pydantic request/response schemas
+- routes/user.py → User-related endpoints
+- routes/simple.py → Simple/example routes
+- security/ → JWT creation and authentication logic
+- services/ → Business logic (e.g. current user retrieval)
+
+---
+
+## Database Migrations (Alembic)
+
+Initialize Alembic:
 
 - alembic init alembic
 
-- For demonstration I added name in the User Model and Schema and generated and applied migration:
+Create a migration:
 
 - alembic revision --autogenerate -m "create column name"
 
+Apply migrations:
+
 - alembic upgrade head
 
-- Then run the FastAPI again and check that everything works fine
+---
 
-# Deployment to Vercel
+## Frontend (Optional)
 
-- Take a look at the file "vercel.json"
+You can test the API using the Vue 3 client:
 
-- Create a Project at Vercel from your repository at GitHub with the code of this FastAPI
+- https://github.com/persteenolsen/vue-fastapi-jwt-auth-client
 
-- Create the envirement variables from .env at Vercel with the connection to PostgreSQL
+This client supports JWT authentication and API interaction.
 
-- Make a commit to your GitHub
+---
 
-- Go to Vercel and check that the build and deployment happened and your site is in Production
+## Deployment (Vercel)
 
-Happy use of FastAPI :-)
+To deploy on Vercel:
 
+1. Configure vercel.json in your project
+2. Create a new project in Vercel from your GitHub repository
+3. Add environment variables from your .env file in Vercel
+4. Push changes to GitHub
+5. Vercel will automatically build and deploy your API
+
+---
+
+## Notes
+
+- Make sure PostgreSQL is running and accessible
+- Update models and run migrations when schema changes
+- Use Swagger UI for quick manual testing
+- Keep SECRET_KEY secure in production
+
+---
+
+Happy coding with FastAPI 🚀
