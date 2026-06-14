@@ -130,6 +130,7 @@ All tests finished
 - routes/simple.py → Simple/example routes
 - security/ → JWT creation and authentication logic
 - services/ → Business logic (e.g. current user retrieval)
+- tests/ → Manual authentication verification scripts
 
 ---
 
