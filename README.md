@@ -1,16 +1,16 @@
-# Python + FastAPI + PostgreSQL + Alembic + SQLAlchemy + JWT Authentication
+# 🔐 Python + FastAPI + PostgreSQL + Alembic + SQLAlchemy + JWT Authentication
 
 A REST API for user registration, authentication, and protected routes using JWT. Includes database migrations and manual tests.
 
-Last updated:
+**Last updated:**
 - 14-06-2026
 
-Python version:
+**Python version:**
 - 3.12
 
 ---
 
-## Features
+## ✨ Features
 
 - User registration and login
 - JWT-based authentication (access tokens)
@@ -23,7 +23,7 @@ Python version:
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 - FastAPI
 - PostgreSQL
@@ -36,15 +36,15 @@ Python version:
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
-### 1. Clone the repository
+### 1️⃣ Clone the repository
 
 Clone from GitHub:
 
 - git clone <your-repository-url>
 
-### 2. Create virtual environment
+### 2️⃣ Create virtual environment
 
 Using PowerShell or VS Code terminal:
 
@@ -55,15 +55,15 @@ Activate it:
 - Windows: Scripts\activate
 - Mac/Linux: source bin/activate
 
-### 3. Install dependencies
+### 3️⃣ Install dependencies
 
 - pip install -r requirements.txt
 
 ---
 
-## Environment Variables
+## ⚙️ Environment Variables
 
-Create a .env file with your configuration:
+Create a `.env` file with your configuration:
 
 - DATABASE_URL=your_postgres_connection_string
 - SECRET_KEY=your_secret_key
@@ -72,7 +72,7 @@ Create a .env file with your configuration:
 
 ---
 
-## Run the Application
+## ▶️ Run the Application
 
 Start the FastAPI server:
 
@@ -86,22 +86,23 @@ Swagger documentation:
 
 - http://127.0.0.1:8000/docs
 
+---
 
-## Manual Tests (Authentication Verification)
+## 🧪 Manual Tests (Authentication Verification)
 
 This project includes a lightweight manual test suite for verifying JWT authentication behavior without requiring pytest.
 
-### Run Tests
+### ▶️ Run Tests
 
 python -m tests.test_auth_manual
 
-### What Is Tested
+### ✅ What Is Tested
 
 - Valid access token authentication
 - Expired token handling
 - Invalid signature detection
 
-### Example Output
+### 📋 Example Output
 
 Valid token test: testuser
 
@@ -113,7 +114,7 @@ All tests finished
 
 ---
 
-## JWT Authentication
+## 🔑 JWT Authentication
 
 - Authentication is handled using JWT tokens
 - Tokens expire after 5 minutes (demo configuration)
@@ -121,7 +122,7 @@ All tests finished
 
 ---
 
-## Project Structure
+## 🏗️ Project Structure
 
 - db/ → Database configuration and session management
 - models/ → SQLAlchemy database models
@@ -134,7 +135,7 @@ All tests finished
 
 ---
 
-## Database Migrations (Alembic)
+## 🗄️ Database Migrations (Alembic)
 
 Initialize Alembic:
 
@@ -150,7 +151,7 @@ Apply migrations:
 
 ---
 
-## Frontend (Optional)
+## 🖥️ Frontend (Optional)
 
 You can test the API using the Vue 3 client:
 
@@ -160,7 +161,7 @@ This client supports JWT authentication and API interaction.
 
 ---
 
-## Deployment (Vercel)
+## ☁️ Deployment (Vercel)
 
 To deploy on Vercel:
 
@@ -172,7 +173,7 @@ To deploy on Vercel:
 
 ---
 
-## Notes
+## 📝 Notes
 
 - Make sure PostgreSQL is running and accessible
 - Update models and run migrations when schema changes
