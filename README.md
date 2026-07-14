@@ -1,9 +1,11 @@
-# 🔐 Python + FastAPI + PostgreSQL + Alembic + SQLAlchemy + JWT Authentication
+# 🔐 JWT Authentication API (FastAPI + PostgreSQL)
 
-A REST API for user registration, authentication, and protected routes using JWT. Includes database migrations and manual tests.
+A REST API built with FastAPI that demonstrates user authentication using JWT access tokens for Single Page Applications (SPAs).
+
+This project was created to learn modern backend architecture, authentication flows, database migrations, manuel tests, and deployment practices using Python.
 
 **Last updated:**
-- 14-06-2026
+- 14-07-2026
 
 **Python version:**
 - 3.12
