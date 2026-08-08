@@ -21,7 +21,7 @@ from routes.simple import router_simple as router_simple_one
 app = FastAPI(
 
     title="FastAPI Authentication Using JWT",
-    description="14-07-2026 - FastAPI authentication service using JWT with PostgreSQL for data persistence and Alembic for database migrations. Demo credentials: testuser / admin",
+    description="08-08-2026 - FastAPI authentication service using JWT with PostgreSQL for data persistence and Alembic for database migrations. Demo credentials: testuser / admin",
     version="0.0.1",
 
     contact={
