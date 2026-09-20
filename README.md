@@ -5,7 +5,7 @@ A REST API built with FastAPI that demonstrates user authentication using JWT ac
 This project was created to learn modern backend architecture, authentication flows, database migrations, manuel tests, and deployment practices using Python.
 
 **Last updated:**
-- 08-08-2026
+- 20-09-2026
 
 **Python version:**
 - 3.12
